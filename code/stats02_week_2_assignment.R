@@ -1,4 +1,5 @@
-# Taken from BioStats textbook, Chapter 5:
+library(tidyverse)
+
 set.seed(123)
 
 iris_sub <- as_tibble(iris) %>% 
@@ -46,15 +47,15 @@ iris_3_setosa <- filter(iris_sub, Sepal.Width > 3,
 
 
 #Select()
-select(iris.sub,
+select(iris_sub,
        Sepal.Length,
        Sepal.Width) #Selects these columns
 
-select(iris.sub,
+select(iris_sub,
        -Sepal.Length,
        -Sepal.Width) #Selects everything but these columns
 
-select(iris.sub,
+select(iris_sub,
        -c(Sepal.Length,
           Sepal.Width)) #Selects everything but these columns
 
@@ -67,7 +68,6 @@ select(iris_sub,
 
 
 #Mutate()
-
 x_max <-  nrow(iris_sub)
 
 x <- 1:x_max
@@ -76,7 +76,7 @@ mutate(iris_sub,
        row_id = x)
 
 mutate(iris_sub,
-       mu_sl = mean(Speal.Length)) #Finds the mean
+       mu_sl = mean(Sepal.Length)) #Finds the mean
 
 mutate(iris_sub,
        sep.area = Sepal.Length * Sepal.Width / 2) #Finds the area
@@ -87,7 +87,6 @@ mutate(group_by(iris_sub, Species),
 
 
 # 5.2.3 Exercise
-
 iris_pw <- select(iris_sub,
                   Petal.Width,
                   Species)
@@ -101,19 +100,17 @@ iris_pw_two <- mutate(iris_sub,
 
 
 #Pipe
-
 iris_sub %>%
   filter(Species == "virginica")
 
 iris_sub %>%
   group_by(Species) %>%
-  mutate(mu_sl = mean(Sepal.Length))
-  ungroup() #Groups and find the mean using pipes, then ungroups
+  mutate(mu_sl = mean(Sepal.Length)) %>%
+  ungroup() #Groups and find the mean using pipes, then removes groups
 
 
 
 # 5.3.2 Exercise
-  
 iris_pipe <- iris_sub %>%
   filter(Species == "setosa") %>%
   mutate(pw_two_times = Petal.Width * 2)
@@ -121,8 +118,8 @@ iris_pipe <- iris_sub %>%
 
 
 #summarize()
-
 iris_summary <- iris_sub %>%
   group_by(Species) %>%
   summarize(mu_sl = mean(Sepal.Length),
-            sum_sl = sum(Sepal.Length))
+            sum_sl = sum(Sepal.Length)) %>%
+  ungroup()
