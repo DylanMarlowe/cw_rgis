@@ -1,9 +1,3 @@
-#Only have to install once in R, after that just using library() to load:
-# install.packages("tidyverse")
-# library(tidyverse)
-
-
-
 # Taken from BioStats textbook, Chapter 5:
 set.seed(123)
 
