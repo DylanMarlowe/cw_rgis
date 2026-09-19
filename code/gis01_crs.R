@@ -71,7 +71,7 @@ mapview(sf_quakes)
 sf_ft_quakes<- sf_quakes %>% 
   slice(c(1, 2))
   
-sf_ft_quakes_proj <- sf_quakes %>% 
+sf_ft_quakes_proj <- sf_ft_quakes %>% 
   st_transform(crs = 32760)
 
 st_distance(sf_ft_quakes_proj)
