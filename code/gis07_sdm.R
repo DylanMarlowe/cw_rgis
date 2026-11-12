@@ -110,3 +110,21 @@ ggplot() +
     y = "Probability of occurance"
   ) +
   theme_bw()
+# Plan For Data Analysis --------------------------------------------------
+unique(df_finsync$latin)
+
+df_finsync %>% 
+  group_by(latin) %>% 
+  summarize(n_present = n_distinct(site_id)) %>% 
+  view()
+
+df_snail_bullhead <- df_finsync %>% 
+  pivot_wider(id_cols = c("site_id", "lon", "lat"),
+              names_from = latin,
+              values_from = presence,
+              values_fill = 0) %>% 
+  select(site_id,
+         lon,
+         lat,
+         "Ameiurus brunneus") %>%
+  rename(y = "Ameiurus brunneus")
