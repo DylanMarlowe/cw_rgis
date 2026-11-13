@@ -49,7 +49,8 @@ sf_four <- sf_nc_county %>%
 # Remove any rows without a `county` value and save the result as `sf_site_four`.
 
 sf_site_four <- st_join(x = sf_site,
-                        y = sf_four)
+                        y = sf_four) %>% 
+  drop_na(county)
 
 # Q4. 
 # Create a map showing the four selected counties (`sf_four`) 
@@ -65,22 +66,13 @@ ggplot() +
 #   so that distances are measured in meters. 
 # Then, find the maximum distance among all site pairs.
 # 
-# ENTER YOUR ANSWER HERE: Not sure how to get max distance, but my brain is fried and can't think of anything, so I'm going to submit it as is.
+# ENTER YOUR ANSWER HERE: 71,724.58 m
 
-sf_site_four_transform <- st_transform(sf_site_four,
-                                       crs = 32617)
+md <- sf_site_four %>% 
+  st_transform(crs = 32617) %>% 
+  st_distance()
 
-sf_site_four_transform %>% 
-  filter(county == "guilford")
-
-sf_site_four_transform %>% 
-  filter(county == "randolph")
-
-sf_site_four_transform %>% 
-  filter(county == "davidson")
-
-sf_site_four_transform %>% 
-  filter(county == "forsyth")
+max(md)
 
 # raster data analysis ----------------------------------------------------
 
@@ -97,15 +89,13 @@ sf_site_four_transform %>%
 
 spr_land <- rast("data/spr_land_reclass.tif")
 
-class       : SpatRaster
-size        : 2729, 8938, 1  (nrow, ncol, nlyr)
-resolution  : 0.0009920635, 0.0009920635  (x, y)
-extent      : -84.32341, -75.45635, 33.88194, 36.58929  (xmin, xmax, ymin, ymax)
-coord. ref. : lon/lat WGS 84 (EPSG:4326)
-source      : spr_land_reclass.tif
-name        : code
-min value   :    0
-max value   : 1100
+unique(spr_land)
+
+## code
+## 1    0
+## 2 1001
+## 3 1010
+## 4 1100
 
 # Q7. 
 # Reclassify the raster `spr_land` to create a new raster object `spr_crop` 
@@ -145,10 +135,11 @@ ggplot() +
 #   from the cropped raster (`spr_crop_four`). 
 # Since cropland pixels are coded as 1 and others as 0, the mean gives the proportion.
 #
-# ENTER YOUR ANSWER HERE: I got 1, but something tells me that's very wrong, so I'm not sure what I'm doing there
+# ENTER YOUR ANSWER HERE: 0.077
 # (round your answer to third decimal places, e.g., 0.021)
 
-mean(spr_crop_four)
+mean(values(spr_crop_four)) %>% 
+  round(3)
 
 # raster-vector interaction -----------------------------------------------
 
